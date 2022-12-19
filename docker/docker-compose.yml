@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+
+  seafile-server:
+    build:
+      # args:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: bash
+    # env_file: .env
+    image: seafile-server
+    networks:
+      - develop
+    ports:
+      # - "5000:5000"
+      # - "8000:8000"
+      - ":443"
+    stdin_open: true
+    tty: true
+    # volumes:
+
+networks:
+  develop:
+    driver: bridge
