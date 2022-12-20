@@ -11,13 +11,15 @@ ARG POETRY_SWITCHES="--without dev,linters,tests,types"
 
 ARG PROJECT_ROOT=/opt/seafile
 WORKDIR ${PROJECT_ROOT}
-RUN mkdir -p ${PROJECT_ROOT}/{ccnet,conf,logs,pids}
-RUN mkdir -p ${PROJECT_ROOT}/seafile-data/{avatars,custom}
+RUN mkdir -p ${PROJECT_ROOT}/{ccnet,conf,logs,pids,seafile-data}
+RUN mkdir -p ${PROJECT_ROOT}/seahub-data/{avatars,custom,thumbnail}
 
 COPY pyproject.toml .
 COPY poetry.lock .
 COPY config ${PROJECT_ROOT}/conf
-COPY docker/nginx /etc/nginx/conf.d
+COPY docker/nginx/log.conf /etc/nginx/
+COPY docker/nginx/mime.types /etc/nginx/
+COPY docker/nginx/conf.d /etc/nginx/conf.d
 
 RUN microdnf install -y glibc-langpack-en.x86_64 && \
 
