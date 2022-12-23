@@ -1,5 +1,5 @@
 # seafile-server
-# Version: 1.0.0
+# Version: 1.1.0
 
 FROM redhat/ubi9-minimal:latest
 
@@ -33,6 +33,7 @@ RUN microdnf install -y glibc-langpack-en.x86_64 && \
                         unzip \
                         tar \
                         gzip \
+                        procps-ng \
                         nginx && \
     microdnf clean all && \
 
