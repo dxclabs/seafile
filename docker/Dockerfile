@@ -1,5 +1,5 @@
 # seafile-server
-# Version: 1.1.0
+# Version: 1.2.0
 
 FROM redhat/ubi9-minimal:latest
 
@@ -29,22 +29,31 @@ RUN microdnf install -y glibc-langpack-en.x86_64 && \
     export LC_COLLATE=C && \
     export LC_CTYPE=en_GB.UTF-8 && \
 
+    rpm -i https://repo.mysql.com/mysql80-community-release-el9-1.noarch.rpm && \
+
     microdnf install -y python39 \
+                        python3-setuptools \
+                        python3-pip \
+                        python3-devel \
+                        python3-cffi \
                         unzip \
                         tar \
                         gzip \
                         procps-ng \
+                        mysql \
+                        mysql-devel \
+                        gcc \
                         nginx && \
-    microdnf clean all && \
+    microdnf clean all
 
 # install packages
-    curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local python3 - --preview && \
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local python3 - --preview && \
     poetry --version && \
     poetry config virtualenvs.create false && \
     poetry install ${POETRY_SWITCHES} && \
-    microdnf clean all && \
+    microdnf clean all
 
-    curl -sSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_${SEAFILE_SERVER_VERSION}_x86-64.tar.gz | tar xvz && \
+RUN curl -sSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_${SEAFILE_SERVER_VERSION}_x86-64.tar.gz | tar xvz && \
     ln -s /opt/seafile/seafile-server-${SEAFILE_SERVER_VERSION} /opt/seafile/seafile-server-latest && \
     chown -R nginx:nginx /opt/seafile/seafile-server-latest && \
 
