@@ -1,5 +1,5 @@
-# seafile-server
-# Version: 1.2.0
+# seafile-server-ce
+# Version: 1.3.0
 
 FROM redhat/ubi9-minimal:latest
 
@@ -35,7 +35,7 @@ RUN microdnf install -y glibc-langpack-en.x86_64 && \
                         python3-setuptools \
                         python3-pip \
                         python3-devel \
-                        python3-cffi \
+                        libffi-devel \
                         unzip \
                         tar \
                         gzip \
@@ -62,7 +62,9 @@ RUN curl -sSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafil
     unzip /tmp/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip -d /usr/local/bin/ && \
     rm /tmp/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip
 
-ENV PYTHON=/usr/bin/python
+RUN /usr/bin/python3 -m pip install --force-reinstall --upgrade --target /opt/seafile/seafile-server-latest/seahub/thirdpart cffi
+
+ENV PYTHON=/usr/bin/python3
 
 # Server
 # 5000 is flask runserver
