@@ -1,6 +1,12 @@
 CHANGELOG
 ###############
 
+1.7.0 - 2024-03-01
+==================
+
+chore: update wait on action in deploy.yaml
+chore: fix poetry install spec in Dockerfile
+
 1.6.0 - 2024-03-01
 ==================
 
