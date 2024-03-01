@@ -20,7 +20,7 @@ services:
     tty: true
     volumes:
       - ./pyproject.toml:/opt/app-root/pyproject.toml:rw
-      - ./poetry.lock:/opt/app-root/poetry.lock
+      - ./poetry.lock:/opt/app-root/poetry.lock:rw
 
 networks:
   develop:

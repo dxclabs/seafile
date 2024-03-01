@@ -6,7 +6,7 @@ FROM redhat/ubi9-minimal:latest
 LABEL maintainer="Campbell McKilligan <campbell@dxclabs.com>"
 
 ARG SEAFILE_SERVER_VERSION=9.0.10
-ARG CONSUL_TEMPLATE_VERSION=0.29.6
+ARG CONSUL_TEMPLATE_VERSION=0.37.1
 ARG POETRY_SWITCHES="--without dev,linters,tests,types"
 
 ARG PROJECT_ROOT=/opt/seafile
@@ -29,9 +29,9 @@ RUN microdnf install -y glibc-langpack-en.x86_64 && \
     export LC_COLLATE=C && \
     export LC_CTYPE=en_GB.UTF-8 && \
 
-    rpm -i https://repo.mysql.com/mysql80-community-release-el9-1.noarch.rpm && \
+    rpm -i https://repo.mysql.com/mysql80-community-release-el9-5.noarch.rpm && \
 
-    microdnf install -y python39 \
+    microdnf install -y python311 \
                         python3-setuptools \
                         python3-pip \
                         python3-devel \

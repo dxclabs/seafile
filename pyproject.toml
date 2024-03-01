@@ -1,11 +1,21 @@
+[tool.autopub]
+project-name = "seafile-ce-server"
+git-username = "campbellmc"
+git-email = "campbell@dxclabs.com"
+changelog-file = "docs/changelog.rst"
+changelog-header = "###############"
+version-header = "="
+version-strings = []
+build-system = "poetry"
+
 [tool.poetry]
-name = "seafile-server"
+name = "seafile-ce-server"
 version = "1.5.0"
 description = "seafile server in a docker container"
 authors = ["DXCLABS LTD"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
 Django = ">=3.2.0,<3.3.0"
 Jinja2 = "^3.1.2"
 Pillow = "^9.3.0"
@@ -20,14 +30,8 @@ pycryptodome = "3.12.0"
 pylibmc = "^1.6.3"
 python3-ldap = "^0.9.8.4"
 
-[tool.poetry.group.linters.dependencies]
-
-[tool.poetry.group.tests.dependencies]
-
-[tool.poetry.group.types.dependencies]
-
 [tool.poetry.group.dev.dependencies]
-bump2version = "^1.0.1"
+autopub = "^0.3.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
