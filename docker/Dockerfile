@@ -1,5 +1,5 @@
 # seafile-server-ce
-# Version: 1.3.0
+# Version: 1.4.0
 
 FROM redhat/ubi9-minimal:latest
 
@@ -7,7 +7,8 @@ LABEL maintainer="Campbell McKilligan <campbell@dxclabs.com>"
 
 ARG SEAFILE_SERVER_VERSION=9.0.10
 ARG CONSUL_TEMPLATE_VERSION=0.37.1
-ARG POETRY_SWITCHES="--without dev,linters,tests,types"
+ARG POETRY_SWITCHES="--without dev"
+# ARG POETRY_SWITCHES="--without dev,linters,tests,types"
 
 ARG PROJECT_ROOT=/opt/seafile
 WORKDIR ${PROJECT_ROOT}
