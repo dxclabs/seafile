@@ -67,7 +67,8 @@ RUN curl -sSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafil
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
     /root/.cargo/bin/uv venv && \
     source .venv/bin/activate && \
-    /root/.cargo/bin/uv pip install -r /opt/seafile/seafile-server-latest/seahub/requirements.txt
+    /root/.cargo/bin/uv pip install -r /opt/seafile/seafile-server-latest/seahub/requirements.txt && \
+    /root/.cargo/bin/uv pip install tzdata sqlalchemy==2.0
 
 # && \
 # install consul template
