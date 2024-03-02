@@ -1,6 +1,11 @@
 CHANGELOG
 ###############
 
+1.11.0 - 2024-03-02
+===================
+
+chore: switch to astral UV for building python venv
+
 1.10.0 - 2024-03-02
 ===================
 
