@@ -1,6 +1,11 @@
 CHANGELOG
 ###############
 
+1.8.0 - 2024-03-02
+==================
+
+chore: add entrypoint for seafile and nginx only (no seahub)
+
 1.7.1 - 2024-03-01
 ==================
 
