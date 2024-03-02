@@ -1,6 +1,11 @@
 CHANGELOG
 ###############
 
+1.11.1 - 2024-03-02
+===================
+
+fix: replacement of Image.ANTIALIAS in /opt/seafile/seafile-server-10.0.1/seahub/seahub/avatar/settings.py
+
 1.11.0 - 2024-03-02
 ===================
 
