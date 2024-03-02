@@ -14,6 +14,7 @@ if [[ "$COMMAND" = 'upgrade' ]]; then
 fi
 
 if [[ "$COMMAND" = 'seafile' ]]; then
+    source /opt/seafile/.venv/bin/activate
     /opt/seafile/seafile-server-latest/seafile.sh start || true
     /opt/seafile/seafile-server-latest/seahub.sh start || true
     exec /usr/sbin/nginx -g 'daemon off;'

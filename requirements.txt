@@ -24,5 +24,4 @@ captcha==0.5.*
 openpyxl==3.0.*
 Markdown==3.4.*
 bleach==5.0.*
-python-ldap==3.4.*
 pypinyin==0.50.*

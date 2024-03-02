@@ -18,6 +18,7 @@ RUN mkdir -p ${PROJECT_ROOT}/seahub-data/{avatars,custom,thumbnail}
 
 COPY pyproject.toml .
 COPY poetry.lock .
+COPY requirements.txt .
 COPY config ${PROJECT_ROOT}/conf
 COPY docker/nginx/log.conf /etc/nginx/
 COPY docker/nginx/mime.types /etc/nginx/
@@ -38,6 +39,7 @@ RUN microdnf install -y glibc-langpack-en.x86_64 && \
                         python3.11-pip \
                         python3.11-devel \
                         libffi-devel \
+                        which \
 #                        unzip \
                         tar \
                         gzip \
@@ -49,12 +51,18 @@ RUN microdnf install -y glibc-langpack-en.x86_64 && \
     microdnf clean all && \
     alternatives --install /usr/bin/python python /usr/bin/python3.11 20000
 
-# install packages
-RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local python - --preview && \
-    poetry --version && \
-    poetry config virtualenvs.create false && \
-    poetry install ${POETRY_SWITCHES} && \
-    microdnf clean all
+# install packages via poetry
+# RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local python - --preview && \
+#     poetry --version && \
+#     poetry config virtualenvs.create false && \
+#     poetry install ${POETRY_SWITCHES} && \
+#     microdnf clean all
+
+# install packages via UV
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    /root/.cargo/bin/uv venv && \
+    source .venv/bin/activate && \
+    /root/.cargo/bin/uv pip install -r requirements.txt
 
 RUN curl -sSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_${SEAFILE_SERVER_VERSION}_x86-64.tar.gz | tar xvz && \
     ln -s /opt/seafile/seafile-server-${SEAFILE_SERVER_VERSION} /opt/seafile/seafile-server-latest && \
@@ -68,7 +76,9 @@ RUN curl -sSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafil
 
 RUN /usr/bin/python -m pip install --force-reinstall --upgrade --target /opt/seafile/seafile-server-latest/seahub/thirdpart cffi
 
-ENV PYTHON=/usr/bin/python
+ENV PYTHON=/opt/seafile/.venv/bin/python
+
+RUN sed -i 's/Image.ANTIALIAS)/None/' /opt/seafile/seafile-server-latest/seahub/seahub/avatar/settings.py
 
 # Server
 # 5000 is flask runserver
