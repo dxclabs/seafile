@@ -78,7 +78,8 @@ RUN /usr/bin/python -m pip install --force-reinstall --upgrade --target /opt/sea
 
 ENV PYTHON=/opt/seafile/.venv/bin/python
 
-RUN sed -i 's/Image.ANTIALIAS)/None/' /opt/seafile/seafile-server-latest/seahub/seahub/avatar/settings.py
+# https://forum.seafile.com/t/seahub-wont-start-and-it-not-gives-any-useful-input-about-why/18535/6
+RUN sed -i 's/Image.ANTIALIAS/None/' /opt/seafile/seafile-server-latest/seahub/seahub/avatar/settings.py
 
 # Server
 # 5000 is flask runserver
