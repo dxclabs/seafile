@@ -1,12 +1,12 @@
 # seafile-server-ce
-# Version: 1.5.0
+# Version: 1.6.0
 
 FROM redhat/ubi9-minimal:latest
 
 LABEL maintainer="Campbell McKilligan <campbell@dxclabs.com>"
 
-ARG SEAFILE_SERVER_VERSION=9.0.10
-# ARG SEAFILE_SERVER_VERSION=10.0.1
+# ARG SEAFILE_SERVER_VERSION=9.0.10
+ARG SEAFILE_SERVER_VERSION=10.0.1
 # ARG CONSUL_TEMPLATE_VERSION=0.37.1
 ARG POETRY_SWITCHES="--without dev"
 # ARG POETRY_SWITCHES="--without dev,linters,tests,types"
