@@ -18,9 +18,9 @@ services:
       - ":443"
     stdin_open: true
     tty: true
-    volumes:
-      - ./pyproject.toml:/opt/app-root/pyproject.toml:rw
-      - ./poetry.lock:/opt/app-root/poetry.lock:rw
+    # volumes:
+    #   - ./pyproject.toml:/opt/app-root/pyproject.toml:rw
+    #   - ./poetry.lock:/opt/app-root/poetry.lock:rw
 
 networks:
   develop:

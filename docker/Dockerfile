@@ -1,12 +1,12 @@
 # seafile-server-ce
-# Version: 1.6.0
+# Version: 1.7.0
 
 FROM redhat/ubi9-minimal:latest
 
 LABEL maintainer="Campbell McKilligan <campbell@dxclabs.com>"
 
 # ARG SEAFILE_SERVER_VERSION=9.0.10
-ARG SEAFILE_SERVER_VERSION=10.0.1
+ARG SEAFILE_SERVER_VERSION=11.0.5
 # ARG CONSUL_TEMPLATE_VERSION=0.37.1
 ARG POETRY_SWITCHES="--without dev"
 # ARG POETRY_SWITCHES="--without dev,linters,tests,types"
@@ -16,9 +16,9 @@ WORKDIR ${PROJECT_ROOT}
 RUN mkdir -p ${PROJECT_ROOT}/{ccnet,conf,logs,pids,seafile-data}
 RUN mkdir -p ${PROJECT_ROOT}/seahub-data/{avatars,custom,thumbnail}
 
-COPY pyproject.toml .
-COPY poetry.lock .
-COPY requirements.txt .
+# COPY pyproject.toml .
+# COPY poetry.lock .
+# COPY requirements.txt .
 COPY config ${PROJECT_ROOT}/conf
 COPY docker/nginx/log.conf /etc/nginx/
 COPY docker/nginx/mime.types /etc/nginx/
@@ -38,6 +38,7 @@ RUN microdnf install -y glibc-langpack-en.x86_64 && \
                         python3.11-setuptools \
                         python3.11-pip \
                         python3.11-devel \
+                        openldap-devel \
                         libffi-devel \
                         which \
 #                        unzip \
@@ -58,15 +59,15 @@ RUN microdnf install -y glibc-langpack-en.x86_64 && \
 #     poetry install ${POETRY_SWITCHES} && \
 #     microdnf clean all
 
+RUN curl -sSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_${SEAFILE_SERVER_VERSION}_x86-64.tar.gz | tar xvz && \
+    ln -s /opt/seafile/seafile-server-${SEAFILE_SERVER_VERSION} /opt/seafile/seafile-server-latest && \
+    chown -R nginx:nginx /opt/seafile/seafile-server-latest
+
 # install packages via UV
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
     /root/.cargo/bin/uv venv && \
     source .venv/bin/activate && \
-    /root/.cargo/bin/uv pip install -r requirements.txt
-
-RUN curl -sSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_${SEAFILE_SERVER_VERSION}_x86-64.tar.gz | tar xvz && \
-    ln -s /opt/seafile/seafile-server-${SEAFILE_SERVER_VERSION} /opt/seafile/seafile-server-latest && \
-    chown -R nginx:nginx /opt/seafile/seafile-server-latest
+    /root/.cargo/bin/uv pip install -r /opt/seafile/seafile-server-latest/seahub/requirements.txt
 
 # && \
 # install consul template
@@ -78,8 +79,9 @@ RUN /usr/bin/python -m pip install --force-reinstall --upgrade --target /opt/sea
 
 ENV PYTHON=/opt/seafile/.venv/bin/python
 
+# Version 10 fix
 # https://forum.seafile.com/t/seahub-wont-start-and-it-not-gives-any-useful-input-about-why/18535/6
-RUN sed -i 's/Image.ANTIALIAS/None/' /opt/seafile/seafile-server-latest/seahub/seahub/avatar/settings.py
+# RUN sed -i 's/Image.ANTIALIAS/None/' /opt/seafile/seafile-server-latest/seahub/seahub/avatar/settings.py
 
 # Server
 # 5000 is flask runserver
