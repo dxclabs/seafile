@@ -10,7 +10,7 @@ build-system = "poetry"
 
 [tool.poetry]
 name = "seafile-ce-server"
-version = "1.11.1"
+version = "1.12.0"
 description = "seafile server in a docker container"
 authors = ["DXCLABS LTD"]
 
