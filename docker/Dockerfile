@@ -1,12 +1,13 @@
 # seafile-server-ce
-# Version: 1.4.0
+# Version: 1.5.0
 
 FROM redhat/ubi9-minimal:latest
 
 LABEL maintainer="Campbell McKilligan <campbell@dxclabs.com>"
 
 ARG SEAFILE_SERVER_VERSION=9.0.10
-ARG CONSUL_TEMPLATE_VERSION=0.37.1
+# ARG SEAFILE_SERVER_VERSION=10.0.1
+# ARG CONSUL_TEMPLATE_VERSION=0.37.1
 ARG POETRY_SWITCHES="--without dev"
 # ARG POETRY_SWITCHES="--without dev,linters,tests,types"
 
@@ -33,11 +34,11 @@ RUN microdnf install -y glibc-langpack-en.x86_64 && \
     rpm -i https://repo.mysql.com/mysql80-community-release-el9-5.noarch.rpm && \
 
     microdnf install -y python311 \
-                        python3-setuptools \
-                        python3-pip \
-                        python3-devel \
+                        python3.11-setuptools \
+                        python3.11-pip \
+                        python3.11-devel \
                         libffi-devel \
-                        unzip \
+#                        unzip \
                         tar \
                         gzip \
                         procps-ng \
@@ -45,10 +46,11 @@ RUN microdnf install -y glibc-langpack-en.x86_64 && \
                         mysql-devel \
                         gcc \
                         nginx && \
-    microdnf clean all
+    microdnf clean all && \
+    alternatives --install /usr/bin/python python /usr/bin/python3.11 20000
 
 # install packages
-RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local python3 - --preview && \
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local python - --preview && \
     poetry --version && \
     poetry config virtualenvs.create false && \
     poetry install ${POETRY_SWITCHES} && \
@@ -56,16 +58,17 @@ RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local python3
 
 RUN curl -sSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_${SEAFILE_SERVER_VERSION}_x86-64.tar.gz | tar xvz && \
     ln -s /opt/seafile/seafile-server-${SEAFILE_SERVER_VERSION} /opt/seafile/seafile-server-latest && \
-    chown -R nginx:nginx /opt/seafile/seafile-server-latest && \
+    chown -R nginx:nginx /opt/seafile/seafile-server-latest
 
+# && \
 # install consul template
-    curl https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip -o /tmp/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip && \
-    unzip /tmp/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip -d /usr/local/bin/ && \
-    rm /tmp/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip
+#    curl https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip -o /tmp/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip && \
+#    unzip /tmp/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip -d /usr/local/bin/ && \
+#    rm /tmp/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip
 
-RUN /usr/bin/python3 -m pip install --force-reinstall --upgrade --target /opt/seafile/seafile-server-latest/seahub/thirdpart cffi
+RUN /usr/bin/python -m pip install --force-reinstall --upgrade --target /opt/seafile/seafile-server-latest/seahub/thirdpart cffi
 
-ENV PYTHON=/usr/bin/python3
+ENV PYTHON=/usr/bin/python
 
 # Server
 # 5000 is flask runserver
